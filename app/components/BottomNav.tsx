@@ -17,19 +17,22 @@ const tabs: { id: Tab; icon: string; label: string }[] = [
 
 export default function BottomNav({ activeTab, onTabChange }: BottomNavProps) {
   return (
-    <nav className="flex items-center justify-around py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-slate-900 border-t border-slate-800">
+    <nav className="flex items-center justify-around py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] bg-slate-900/95 backdrop-blur-xl border-t border-slate-800">
       {tabs.map(tab => (
         <button
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition-colors min-w-[56px] ${
+          className={`flex flex-col items-center gap-0.5 px-3 py-1 rounded-lg transition-all duration-200 min-w-[56px] ${
             activeTab === tab.id
-              ? "text-indigo-400"
+              ? "text-indigo-400 scale-105"
               : "text-slate-500 hover:text-slate-300"
           }`}
         >
           <span className="text-xl">{tab.icon}</span>
           <span className="text-[10px] font-medium">{tab.label}</span>
+          {activeTab === tab.id && (
+            <div className="w-1 h-1 rounded-full bg-indigo-400 mt-0.5" />
+          )}
         </button>
       ))}
     </nav>

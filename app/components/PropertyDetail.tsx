@@ -26,6 +26,12 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
   ]);
   const [showBoardPicker, setShowBoardPicker] = useState(false);
   const [voteResult, setVoteResult] = useState<string | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
+
+  const showToast = (msg: string) => {
+    setToast(msg);
+    setTimeout(() => setToast(null), 2000);
+  };
 
   if (!property) return <div className="p-4 text-slate-400">Property not found</div>;
 
@@ -40,7 +46,7 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
   };
 
   return (
-    <div className="h-screen flex flex-col bg-slate-950">
+    <div className="h-screen flex flex-col bg-slate-950 max-w-lg mx-auto">
       {/* Header */}
       <div className="flex items-center gap-3 px-4 py-3 bg-slate-900 border-b border-slate-800">
         <button onClick={onBack} className="text-slate-400 hover:text-white text-lg">←</button>
@@ -67,11 +73,20 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
               </div>
             </>
           )}
-          {property.tags.map(tag => (
-            <span key={tag} className="absolute top-3 left-3 px-2 py-0.5 bg-emerald-500/90 rounded-full text-[10px] font-bold text-white mr-1.5 first:ml-0">
-              {tag}
-            </span>
-          ))}
+          {property.tags.length > 0 && (
+            <div className="absolute top-3 left-3 flex gap-1.5">
+              {property.tags.map(tag => (
+                <span key={tag} className={`px-2 py-0.5 rounded-full text-[10px] font-bold text-white ${
+                  tag === "New Listing" ? "bg-emerald-500/90" :
+                  tag === "Price Drop" ? "bg-red-500/90" :
+                  tag === "Hot Market" ? "bg-amber-500/90" :
+                  "bg-indigo-500/90"
+                }`}>
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Actions */}
@@ -83,7 +98,14 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
           <button onClick={() => setTab("comments")} className="flex items-center gap-1.5 text-sm text-slate-400">
             <span className="text-xl">💬</span> {comments.length}
           </button>
-          <button className="text-xl text-slate-400">📤</button>
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({ title: `${property.address} - $${property.price.toLocaleString()}`, text: "Check out this property on HomeFeed!" });
+              }
+            }}
+            className="text-xl text-slate-400 hover:text-slate-300 transition-colors"
+          >📤</button>
           <div className="flex-1" />
           <span className="text-xs font-medium text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded-full">{property.matchScore}% match</span>
         </div>
@@ -150,8 +172,8 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
               <div>
                 <h3 className="text-sm font-bold text-white mb-2">Property Info</h3>
                 <div className="grid grid-cols-2 gap-2 text-xs">
-                  <div className="glass rounded-lg p-2"><span className="text-slate-500">Type:</span> <span className="text-slate-300">{property.propertyType.replace("_", " ")}</span></div>
-                  <div className="glass rounded-lg p-2"><span className="text-slate-500">Lot:</span> <span className="text-slate-300">{property.lotSize.toLocaleString()} sqft</span></div>
+                  <div className="glass rounded-lg p-2"><span className="text-slate-500">Type:</span> <span className="text-slate-300">{property.propertyType.replace(/_/g, " ")}</span></div>
+                  <div className="glass rounded-lg p-2"><span className="text-slate-500">Lot:</span> <span className="text-slate-300">{property.lotSize > 0 ? `${property.lotSize} acres` : "N/A"}</span></div>
                   <div className="glass rounded-lg p-2"><span className="text-slate-500">Built:</span> <span className="text-slate-300">{property.yearBuilt}</span></div>
                   <div className="glass rounded-lg p-2"><span className="text-slate-500">DOM:</span> <span className="text-slate-300">{property.daysOnMarket} days</span></div>
                 </div>
@@ -242,7 +264,7 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
               {boards.map(board => (
                 <button
                   key={board.id}
-                  onClick={() => { addToBoard(board.id, property.id); setShowBoardPicker(false); }}
+                  onClick={() => { addToBoard(board.id, property.id); setShowBoardPicker(false); showToast(`Saved to "${board.name}"`); }}
                   className="w-full flex items-center gap-3 p-3 glass rounded-xl hover:bg-white/[0.08] text-left"
                 >
                   <span className="text-xl">📌</span>
@@ -254,6 +276,13 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Toast notification */}
+      {toast && (
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 px-4 py-2 bg-indigo-500 text-white text-sm font-medium rounded-full shadow-lg animate-fade-in z-50">
+          ✓ {toast}
         </div>
       )}
     </div>

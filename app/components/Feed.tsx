@@ -20,16 +20,20 @@ export default function Feed() {
         <h1 className="text-xl font-bold text-white">
           Home<span className="text-indigo-400">Feed</span>
         </h1>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <select
             value={sortBy}
             onChange={e => setSortBy(e.target.value as typeof sortBy)}
-            className="bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-300 px-2 py-1.5 outline-none"
+            className="bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-300 px-2 py-1.5 outline-none cursor-pointer"
           >
             <option value="recommended">🎯 For You</option>
             <option value="newest">🆕 Newest</option>
             <option value="popular">🔥 Popular</option>
           </select>
+          <button className="relative text-xl text-slate-400 hover:text-white transition-colors">
+            🔔
+            <span className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full text-[8px] text-white flex items-center justify-center font-bold">3</span>
+          </button>
         </div>
       </div>
 

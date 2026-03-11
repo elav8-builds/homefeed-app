@@ -158,7 +158,14 @@ export default function PropertyCard({ propertyId, compact }: PropertyCardProps)
           <span>💬</span>
           <span>{property.commentCount}</span>
         </button>
-        <button className="text-sm text-slate-400">📤</button>
+        <button
+          onClick={() => {
+            if (navigator.share) {
+              navigator.share({ title: `${property.address} - $${property.price.toLocaleString()}`, text: `Check out this property on HomeFeed!`, url: window.location.href });
+            }
+          }}
+          className="text-sm text-slate-400 hover:text-slate-300 transition-colors"
+        >📤</button>
         <div className="flex-1" />
         <button onClick={() => toggleSave(property.id)} className="text-lg">
           {isSaved ? "🔖" : "📑"}

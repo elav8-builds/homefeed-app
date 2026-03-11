@@ -15,6 +15,9 @@
   --color-coral-500: #f97066;
   --color-coral-400: #fb8f84;
 
+  --color-red-500: #ef4444;
+  --color-red-600: #dc2626;
+
   --color-emerald-500: #10b981;
   --color-emerald-400: #34d399;
 
@@ -89,6 +92,24 @@ body {
 @keyframes pulse-glow {
   0%, 100% { box-shadow: 0 0 8px rgba(99, 102, 241, 0.3); }
   50% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+}
+
+/* Safe area for mobile browsers */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  body { padding-bottom: env(safe-area-inset-bottom); }
+}
+
+/* Smooth scrolling */
+* { scroll-behavior: smooth; }
+
+/* Tap highlight */
+button, a, [role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Image loading */
+img {
+  transition: opacity 0.3s ease;
 }
 
 /* Scrollbar */

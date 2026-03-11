@@ -10,6 +10,7 @@ export default function DreamBoards() {
   const [showCreate, setShowCreate] = useState(false);
   const [newBoardName, setNewBoardName] = useState("");
   const [selectedBoard, setSelectedBoard] = useState<string | null>(null);
+  const [showAllSaved, setShowAllSaved] = useState(false);
 
   const handleCreate = () => {
     if (newBoardName.trim()) {
@@ -21,6 +22,35 @@ export default function DreamBoards() {
 
   const savedList = properties.filter(p => savedProperties.has(p.id));
   const activeBoard = selectedBoard ? boards.find(b => b.id === selectedBoard) : null;
+
+  if (showAllSaved) {
+    return (
+      <div className="h-full flex flex-col">
+        <div className="flex items-center gap-3 px-4 py-3 bg-slate-900 border-b border-slate-800">
+          <button onClick={() => setShowAllSaved(false)} className="text-slate-400 hover:text-white">←</button>
+          <div className="flex-1">
+            <h2 className="text-lg font-bold text-white">All Saved</h2>
+            <p className="text-xs text-slate-500">{savedList.length} homes saved</p>
+          </div>
+        </div>
+        <div className="flex-1 overflow-y-auto p-4">
+          {savedList.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-4xl mb-2">🔖</p>
+              <p className="text-slate-400">No saved homes yet</p>
+              <p className="text-sm text-slate-600 mt-1">Tap the bookmark icon on any listing to save it</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 gap-3">
+              {savedList.map(p => (
+                <PropertyCard key={p.id} propertyId={p.id} compact />
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   if (activeBoard) {
     const boardProperties = properties.filter(p => activeBoard.propertyIds.includes(p.id));
@@ -68,10 +98,10 @@ export default function DreamBoards() {
         {/* Saved section */}
         <div
           className="glass rounded-2xl p-4 cursor-pointer hover:bg-white/[0.08] transition-all"
-          onClick={() => setSelectedBoard(null)}
+          onClick={() => setShowAllSaved(true)}
         >
           <div className="flex items-center gap-3">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-coral-500/20 to-coral-600/20 border border-coral-500/20 flex items-center justify-center text-2xl">
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-red-500/20 to-red-600/20 border border-red-500/20 flex items-center justify-center text-2xl">
               🔖
             </div>
             <div>

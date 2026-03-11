@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useApp } from "../hooks/useApp";
 
 const conversations = [
   { id: "1", name: "Jane Smith", avatar: "https://ui-avatars.com/api/?name=Jane+Smith&background=6366f1&color=fff", lastMessage: "I'd love to show you that property on Oak Valley!", time: "2m ago", unread: true, isAgent: true },
@@ -10,6 +11,7 @@ const conversations = [
 ];
 
 export default function Messages() {
+  const { selectProperty } = useApp();
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [messageInput, setMessageInput] = useState("");
 
@@ -44,13 +46,13 @@ export default function Messages() {
           {/* Shared property card */}
           <div className="flex justify-start">
             <div className="glass rounded-2xl overflow-hidden max-w-[80%]">
-              <div className="aspect-video bg-gradient-to-br from-indigo-900/30 to-slate-800 flex items-center justify-center">
-                <span className="text-4xl">🏠</span>
+              <div className="aspect-video bg-slate-800 relative overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=400&h=250&fit=crop" alt="Property" className="w-full h-full object-cover" loading="lazy" />
               </div>
               <div className="p-3">
                 <p className="text-sm font-bold text-white">$725,000</p>
                 <p className="text-xs text-slate-400">1247 Oak Valley Dr • 4bd 3ba</p>
-                <button className="mt-2 text-xs text-indigo-400 font-medium">View Listing →</button>
+                <button onClick={() => selectProperty("prop-1")} className="mt-2 text-xs text-indigo-400 font-medium hover:text-indigo-300 transition-colors">View Listing →</button>
               </div>
             </div>
           </div>

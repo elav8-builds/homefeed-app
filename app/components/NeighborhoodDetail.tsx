@@ -20,7 +20,7 @@ export default function NeighborhoodDetail({ neighborhoodId, onBack }: Props) {
   const hoodProperties = properties.filter(p => p.neighborhoodId === hood.id);
 
   return (
-    <div className="h-screen flex flex-col bg-slate-950">
+    <div className="h-screen flex flex-col bg-slate-950 max-w-lg mx-auto">
       <div className="flex items-center gap-3 px-4 py-3 bg-slate-900 border-b border-slate-800">
         <button onClick={onBack} className="text-slate-400 hover:text-white text-lg">←</button>
         <div className="flex-1">

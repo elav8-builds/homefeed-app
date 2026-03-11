@@ -30,7 +30,7 @@ function AppShell() {
   }
 
   return (
-    <div className="h-screen flex flex-col bg-slate-950">
+    <div className="h-screen flex flex-col bg-slate-950 max-w-lg mx-auto relative">
       <div className="flex-1 overflow-hidden">
         {activeTab === "feed" && <Feed />}
         {activeTab === "explore" && <Explore />}
