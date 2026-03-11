@@ -1,30 +1,63 @@
 "use client";
 
 import { useApp } from "../hooks/useApp";
+import { useAuth } from "../hooks/useAuth";
 import { properties } from "../data/properties";
 import PropertyCard from "./PropertyCard";
 
 export default function Profile() {
   const { likedProperties, savedProperties, boards, followedAgents, followedNeighborhoods, vibeMatchComplete, vibeProfile } = useApp();
+  const { user, profile, isDemo, signOut } = useAuth();
 
   const likedList = properties.filter(p => likedProperties.has(p.id));
   const savedList = properties.filter(p => savedProperties.has(p.id));
 
+  const displayName = profile?.full_name || user?.email?.split("@")[0] || "Guest User";
+  const displayEmail = user?.email || "Demo Mode";
+  const displayInitial = displayName[0]?.toUpperCase() || "G";
+
   return (
     <div className="h-full flex flex-col">
-      <div className="px-4 py-3 bg-slate-900 border-b border-slate-800">
+      <div className="px-4 py-3 bg-slate-900 border-b border-slate-800 flex items-center justify-between">
         <h1 className="text-lg font-bold text-white">Profile</h1>
+        {!isDemo && (
+          <button
+            onClick={signOut}
+            className="text-xs text-slate-500 hover:text-red-400 transition-colors px-3 py-1.5 rounded-lg hover:bg-red-500/10"
+          >
+            Sign Out
+          </button>
+        )}
       </div>
 
       <div className="flex-1 overflow-y-auto">
         {/* User card */}
         <div className="p-4">
           <div className="glass rounded-2xl p-6 text-center">
-            <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-coral-500 flex items-center justify-center text-3xl text-white font-bold mb-3">
-              B
-            </div>
-            <h2 className="text-xl font-bold text-white">Beau Bratton</h2>
-            <p className="text-sm text-slate-400">Home Browser • Austin, TX</p>
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={displayName}
+                className="w-20 h-20 mx-auto rounded-full object-cover mb-3"
+              />
+            ) : (
+              <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-indigo-500 to-coral-500 flex items-center justify-center text-3xl text-white font-bold mb-3">
+                {displayInitial}
+              </div>
+            )}
+            <h2 className="text-xl font-bold text-white">{displayName}</h2>
+            <p className="text-sm text-slate-400">
+              {isDemo ? "Guest • Demo Mode" : `${displayEmail} • Austin, TX`}
+            </p>
+
+            {isDemo && (
+              <a
+                href="/login"
+                className="inline-block mt-3 px-4 py-2 bg-indigo-500 hover:bg-indigo-400 rounded-xl text-xs text-white font-medium transition-all"
+              >
+                Sign in to sync your data
+              </a>
+            )}
 
             <div className="flex justify-center gap-6 mt-4">
               <div className="text-center">

@@ -3,9 +3,11 @@
 import { useState } from "react";
 import PropertyCard from "./PropertyCard";
 import { properties } from "../data/properties";
+import { useAuth } from "../hooks/useAuth";
 
 export default function Feed() {
   const [sortBy, setSortBy] = useState<"recommended" | "newest" | "popular">("recommended");
+  const { user, isDemo } = useAuth();
 
   const sorted = [...properties].sort((a, b) => {
     if (sortBy === "newest") return new Date(b.listDate).getTime() - new Date(a.listDate).getTime();
@@ -36,6 +38,29 @@ export default function Feed() {
           </button>
         </div>
       </div>
+
+      {/* Demo mode banner */}
+      {isDemo && (
+        <div className="px-4 py-2 bg-indigo-500/10 border-b border-indigo-500/20">
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-indigo-300">
+              👋 Browsing as guest — <span className="text-indigo-200">your likes & saves won&apos;t be saved</span>
+            </p>
+            <a href="/login" className="text-xs text-indigo-400 font-medium hover:text-indigo-300 transition-colors">
+              Sign in
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Connected user indicator */}
+      {user && !isDemo && (
+        <div className="px-4 py-1.5 bg-emerald-500/5 border-b border-emerald-500/10">
+          <p className="text-[10px] text-emerald-400/70">
+            ✓ Connected as {user.email} — data synced
+          </p>
+        </div>
+      )}
 
       {/* Feed */}
       <div className="flex-1 overflow-y-auto">

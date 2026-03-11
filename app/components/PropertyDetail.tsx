@@ -101,7 +101,7 @@ export default function PropertyDetail({ propertyId, onBack }: Props) {
           <button
             onClick={() => {
               if (navigator.share) {
-                navigator.share({ title: `${property.address} - $${property.price.toLocaleString()}`, text: "Check out this property on HomeFeed!" });
+                navigator.share({ title: `${property.address} - $${property.price.toLocaleString()}`, text: "Check out this property on HomeFeed!", url: `${window.location.origin}/property/${property.id}` });
               }
             }}
             className="text-xl text-slate-400 hover:text-slate-300 transition-colors"

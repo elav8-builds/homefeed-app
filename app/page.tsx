@@ -11,12 +11,26 @@ import NeighborhoodDetail from "./components/NeighborhoodDetail";
 import AgentDetail from "./components/AgentDetail";
 import BottomNav from "./components/BottomNav";
 import { AppProvider, useApp } from "./hooks/useApp";
+import { AuthProvider, useAuth } from "./hooks/useAuth";
 
 type Tab = "feed" | "explore" | "boards" | "messages" | "profile";
 
 function AppShell() {
   const [activeTab, setActiveTab] = useState<Tab>("feed");
   const { selectedPropertyId, selectedNeighborhoodId, selectedAgentId, clearSelection } = useApp();
+  const { loading } = useAuth();
+
+  // Show loading spinner while auth is initializing
+  if (loading) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-slate-950">
+        <div className="text-center">
+          <div className="w-10 h-10 border-2 border-indigo-400 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+          <p className="text-sm text-slate-500">Loading HomeFeed...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Detail views override tabs
   if (selectedPropertyId) {
@@ -45,8 +59,10 @@ function AppShell() {
 
 export default function Home() {
   return (
-    <AppProvider>
-      <AppShell />
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <AppShell />
+      </AppProvider>
+    </AuthProvider>
   );
 }
